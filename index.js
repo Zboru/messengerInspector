@@ -28,6 +28,11 @@ fs.readdirSync(messages_directory).forEach(file => {
     messages_files.push(file);
 });
 
+// If there's no files with messages, stop execution
+if (messages_files.length === 1) {
+    throw new Error("Messages directory is empty")
+}
+
 // For every file, import object and push it to array
 messages_files.forEach(file => {
     let obj = require(messages_directory + file);
