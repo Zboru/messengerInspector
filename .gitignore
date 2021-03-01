@@ -1,3 +1,4 @@
 json/*.json
 export.json
 node_modules
+.idea
