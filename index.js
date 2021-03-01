@@ -1,5 +1,6 @@
 const fs = require('fs');
 const utf8 = require('utf8');
+const chalk = require('chalk');
 
 const messages_directory = './json/';
 const messages_files = [];
@@ -12,298 +13,420 @@ let thread = {
         'day': {},
     },
     period_variables: {
-      day: null,
-      month: null,
-      year: null,
+        day: null,
+        month: null,
+        year: null,
     },
     words_count: [],
-    dates: null,
+    dates: {
+        set: new Set(),
+        array: [],
+    },
     title: null,
     participants: [],
     creation_date: null,
     message_count: 0,
 };
-// Read messages directory for filenames
-fs.readdirSync(messages_directory).forEach(file => {
-    messages_files.push(file);
-});
 
-// If there's no files with messages, stop execution
-if (messages_files.length === 1) {
-    throw new Error("Messages directory is empty")
+function init() {
+    readDirectory();
+    importContent();
+    setThreadTitle();
+    saveParticipants();
+    saveMessages();
+    decodeMessages();
+    chronologicalSort();
+    setCreationDate();
+    setMessageCount();
+    storeDates();
+    convertDates();
+    matchMessagesDates();
+    storeDatesStatistics();
+    countDateStatistics();
+    periodStatistics();
+    countParticipantMessages()
+    participantDateMessages();
+    participantAverageWords();
+    participantAverageWordLength();
+    participantTotalWords();
+    mostFrequentWords();
+    exportData();
 }
 
-// For every file, import object and push it to array
-messages_files.forEach(file => {
-    let obj = require(messages_directory + file);
-    messages_objects.push(obj);
-})
+init();
 
-// Sort files by name using natural sort
-messages_files.sort((a, b) => {
-    return a.localeCompare(b, undefined, {numeric: true, sensitivity: 'base'})
-})
 
-// Set thread title
-console.info('\t Setting title')
-thread.title = utf8.decode(messages_objects[0].title);
-
-// Set participants
-thread.participants = messages_objects[0].participants
-
-// Make sure that every name is utf-8 decoded
-console.info('\t Saving participants')
-thread.participants.forEach(participant => {
-    participant.name = utf8.decode(participant.name)
-    participant.count = 0;
-})
-
-// Load all messages into one array
-console.info('\t Loading messages')
-messages_objects.forEach(object => {
-    thread.messages.push(...object.messages);
-})
-
-// Sort messages chronologically
-console.info('\t Sorting messages')
-thread.messages.sort((a, b) => {
-    return parseInt(b.timestamp_ms) - parseInt(a.timestamp_ms);
-})
-
-// Set thread creation date
-console.info('\t Setting creation date')
-thread.creation_date = new Date(thread.messages[thread.messages.length - 1].timestamp_ms);
-
-// Set messages count
-console.info('\t Counting messages')
-thread.message_count = thread.messages.length;
-
-// Store dates in YYYY-MM-DD from messages
-const dates = new Set();
-console.info('\t Gathering days from messages')
-thread.messages.forEach(message => {
-    dates.add(new Date(message.timestamp_ms).toJSON().slice(0,10))
-})
-
-// Convert thread dates to object with date and messages array
-console.info('\t Creating array with dates and messages')
-let dates_array = Array.from(dates);
-dates_array.forEach((date, index) => {
-    dates_array[index] = {
-        date: date,
-        messages: [],
-        message_count: 0,
-        participants: thread.participants.map(participant => {
-            return {
-                'name': participant.name,
-                'count': 0
-            }
-        })
+/**
+ * Read 'json' directory for filenames to further use
+ */
+function readDirectory() {
+    process.stdout.write('\033c');
+    infoLogStart("Collecting filenames");
+    fs.readdirSync(messages_directory).forEach(file => {
+        if (file !== '.gitkeep') messages_files.push(file);
+    });
+    // If there's no files with messages, stop execution
+    if (messages_files.length <= 1) {
+        errorLog("\nNo files in messages directory! Execution stopped.");
+        hintLog("Check if there's files in 'json' directory, then launch script again.")
+        process.exit();
     }
-})
-thread.dates = dates_array;
+    infoLogFinish("Collecting filenames");
+}
 
-// Add messages to according date
-console.info('\t Synchronize messages with dates')
-thread.messages.forEach(message => {
-    const message_date = new Date(message.timestamp_ms).toJSON().slice(0,10);
-    const date_index = thread.dates.findIndex(d => d.date === message_date);
-    thread.dates[date_index].messages.push(message);
-})
-
-// Create days/months/years in thread for message count
-console.info('\t Create days/months/years for counting')
-const years = new Set();
-const months = new Set();
-const days = new Set();
-
-thread.dates.forEach(date => {
-    date.messages.forEach(message => {
-        const year = new Date(message.timestamp_ms).toJSON().slice(0,4);
-        const month = new Date(message.timestamp_ms).toJSON().slice(0,7);
-        const day = new Date(message.timestamp_ms).toJSON().slice(0,10);
-        years.add(year);
-        months.add(month);
-        days.add(day);
+/**
+ * Import every file from gathered filenames and push it to array
+ */
+function importContent() {
+    messages_files.forEach(file => {
+        messages_objects.push(require(messages_directory + file));
     })
-})
+    // Sort files by name using natural sort
+    messages_files.sort((a, b) => {
+        return a.localeCompare(b, undefined, {numeric: true, sensitivity: 'base'})
+    })
+}
 
-const years_array = Array.from(years)
-const months_array = Array.from(months)
-const days_array = Array.from(days)
+/**
+ * Save thread title to object
+ */
+function setThreadTitle() {
+    infoLogStart("Setting title");
+    thread.title = utf8.decode(messages_objects[0].title);
+    infoLogFinish("Setting title");
+}
 
-years_array.forEach(year => {
-    thread.messages_per.year[year] = 0
-})
+/**
+ * Save participants names to object for later identification
+ */
+function saveParticipants() {
+    infoLogStart("Saving participants");
+    thread.participants = messages_objects[0].participants
+    // Make sure that every name is utf-8 decoded
+    thread.participants.forEach(participant => {
+        participant.name = utf8.decode(participant.name)
+        participant.count = 0;
+    })
+    infoLogFinish("Saving participants");
+}
 
-months_array.forEach(month => {
-    thread.messages_per.month[month] = 0
-})
+/**
+ * Store all messages from gathered files to one array
+ */
+function saveMessages() {
+    infoLogStart("Storing messages to database");
+    messages_objects.forEach(object => {
+        thread.messages.push(...object.messages);
+    })
+    infoLogFinish("Storing messages to database");
+}
 
-days_array.forEach(day => {
-    thread.messages_per.day[day] = 0
-})
+/**
+ * Sort thread messages chronologically
+ */
+function chronologicalSort() {
+    infoLogStart('Sorting messages chronologically')
+    thread.messages.sort((a, b) => {
+        return parseInt(b.timestamp_ms) - parseInt(a.timestamp_ms);
+    })
+    infoLogFinish('Sorting messages chronologically')
+}
 
-// Count messages per day/month/year
-console.info('\t Count messages by day/month/year')
-thread.dates.forEach(date => {
-    date.messages.forEach(message => {
-        const message_year = new Date(message.timestamp_ms).toJSON().slice(0,4);
-        const message_month = new Date(message.timestamp_ms).toJSON().slice(0,7);
-        const message_day = new Date(message.timestamp_ms).toJSON().slice(0,10);
+/**
+ * Save thread creation date
+ */
+function setCreationDate() {
+    infoLogStart('Setting creation date')
+    thread.creation_date = new Date(thread.messages[thread.messages.length - 1].timestamp_ms);
+    infoLogFinish('Setting creation date')
+}
 
+/**
+ * Save thread message count
+ */
+function setMessageCount() {
+    infoLogStart('Counting messages')
+    thread.message_count = thread.messages.length;
+    infoLogFinish('Counting messages')
+}
+
+/**
+ * Save unique dates to Set
+ */
+function storeDates() {
+    infoLogStart("Gathering days from messages")
+    thread.messages.forEach(message => {
+        thread.dates.set.add(new Date(message.timestamp_ms).toJSON().slice(0, 10))
+    })
+    infoLogFinish("Gathering days from messages")
+}
+
+function decodeMessages() {
+    infoLogStart("Decoding messages content to readable form")
+    thread.messages.forEach((message, index) => {
+        const fixedMessage =  {...message};
+        fixedMessage.sender_name = utf8.decode(message.sender_name)
+        if (message.content) {
+            fixedMessage.content = utf8.decode(message.content)
+        }
+        thread.messages[index] = fixedMessage;
+    })
+    infoLogFinish("Decoding messages content to readable form")
+}
+
+/**
+ * Convert saved dates from Set to object with properties
+ */
+function convertDates() {
+    infoLogStart('Creating array with dates and messages')
+    let dates_array = Array.from(thread.dates.set);
+    dates_array.forEach((date, index) => {
+        dates_array[index] = {
+            date: date,
+            messages: [],
+            message_count: 0,
+            participants: thread.participants.map(participant => {
+                return {
+                    'name': participant.name,
+                    'count': 0
+                }
+            })
+        }
+    })
+    thread.dates.array = dates_array;
+    infoLogFinish('Creating array with dates and messages')
+}
+
+/**
+ * Sort every message to its date in thread dates array
+ */
+function matchMessagesDates() {
+    infoLogStart('Synchronize messages with dates')
+    thread.messages.forEach(message => {
+        const message_date = new Date(message.timestamp_ms).toJSON().slice(0, 10);
+        const date_index = thread.dates.array.findIndex(d => d.date === message_date);
+        thread.dates.array[date_index].messages.push(message);
+    })
+    infoLogFinish('Synchronize messages with dates')
+}
+
+/**
+ * Create days/months/years in thread for message count
+ */
+function storeDatesStatistics() {
+    infoLogStart('Create days/months/years in thread for message count')
+    const days = new Set();
+    const months = new Set();
+    const years = new Set();
+
+    thread.dates.array.forEach(d => {
+        years.add(d.date.slice(0, 4));
+        months.add(d.date.slice(0, 7));
+        days.add(d.date.slice(0, 10));
+    })
+
+    Array.from(years).forEach(year => {
+        thread.messages_per.year[year] = 0
+    })
+    Array.from(months).forEach(month => {
+        thread.messages_per.month[month] = 0
+    })
+    Array.from(days).forEach(day => {
+        thread.messages_per.day[day] = 0
+    })
+    infoLogFinish('Create days/months/years in thread for message count')
+}
+
+/**
+ * Count messages by day/month/year
+ */
+function countDateStatistics() {
+    infoLogStart('Count messages by day/month/year')
+    thread.messages.forEach(message => {
+        const message_year = new Date(message.timestamp_ms).toJSON().slice(0, 4);
+        const message_month = new Date(message.timestamp_ms).toJSON().slice(0, 7);
+        const message_day = new Date(message.timestamp_ms).toJSON().slice(0, 10);
         thread.messages_per.year[message_year]++;
         thread.messages_per.month[message_month]++;
         thread.messages_per.day[message_day]++;
     })
-})
+    infoLogFinish('Count messages by day/month/year')
+}
 
-// Get day/month/year with most and least messages
-console.info('\t Select periods with most and least messages')
-function getPeriodVariables(period_object) {
-    const dateArray = Object.values(period_object)
-    const min = Math.min(...dateArray);
-    const max = Math.max(...dateArray);
-    const best_period = Object.keys(period_object).find(key => period_object[key] === max);
-    const worst_period = Object.keys(period_object).find(key => period_object[key] === min);
-    return {
-        best: {
-            'period': best_period,
-            'count': max,
-        },
-        worst: {
-            'period': worst_period,
-            'count': min
+/**
+ * Select periods with most and least messages
+ */
+function periodStatistics() {
+    infoLogStart('Select periods with most and least messages')
+
+    function getPeriodVariables(period_object) {
+        const dateArray = Object.values(period_object)
+        const min = Math.min(...dateArray);
+        const max = Math.max(...dateArray);
+        const best_period = Object.keys(period_object).find(key => period_object[key] === max);
+        const worst_period = Object.keys(period_object).find(key => period_object[key] === min);
+        return {
+            best: {
+                'period': best_period,
+                'count': max,
+            },
+            worst: {
+                'period': worst_period,
+                'count': min
+            }
         }
     }
+
+    thread.period_variables.year = getPeriodVariables(thread.messages_per.year)
+    thread.period_variables.month = getPeriodVariables(thread.messages_per.month)
+    thread.period_variables.day = getPeriodVariables(thread.messages_per.day)
+    infoLogFinish('Select periods with most and least messages')
 }
-thread.period_variables.year = getPeriodVariables(thread.messages_per.year)
-thread.period_variables.month = getPeriodVariables(thread.messages_per.month)
-thread.period_variables.day = getPeriodVariables(thread.messages_per.day)
 
-// Count messages per participant in date
-console.info('\t Count participants messages in every date')
-thread.dates.forEach(date => {
-    date.messages.forEach(message => {
-        const participant = utf8.decode(message.sender_name);
-        const date_participant_index = date.participants.findIndex(p => p.name === participant);
-        date.participants[date_participant_index].count++;
+/**
+ * Count messages per participant in date
+ */
+function participantDateMessages() {
+    infoLogStart('Count participants messages in every date')
+    thread.dates.array.forEach(date => {
+        date.messages.forEach(message => {
+            const participant = message.sender_name
+            const date_participant_index = date.participants.findIndex(p => p.name === participant);
+            date.participants[date_participant_index].count++;
+        })
     })
-})
+    infoLogFinish('Count participants messages in every date')
+}
 
-// Count participant messages in total
-console.info('\t Count all participants messages')
-thread.messages.forEach(message => {
-        const participant = utf8.decode(message.sender_name);
+/**
+ * Count participant messages in total
+ */
+function countParticipantMessages() {
+    infoLogStart('Count every participant messages')
+    thread.messages.forEach(message => {
+        const participant = message.sender_name;
         const participant_index = thread.participants.findIndex(p => p.name === participant);
-    thread.participants[participant_index].count++;
-})
-
-// Count participant average words in sentence
-console.info('\t Count participants average of words in sentence')
-const array_average = (array) => array.reduce((a, b) => a + b) / array.length;
-thread.participants.forEach(participant => {
-    const participant_name = participant.name;
-    const words_in_sentence = [];
-    thread.messages.forEach(message => {
-        if (utf8.decode(message.sender_name) === participant_name && message.content) {
-            const words = message.content.split(' ');
-            words_in_sentence.push(words.length);
-        }
+        thread.participants[participant_index].count++;
     })
-    participant.average_words_per_sentence = array_average(words_in_sentence);
-})
-
-// Count participant average words in sentence
-console.info('\t Count participants average of word length')
-thread.participants.forEach(participant => {
-    const participant_name = participant.name;
-    const words_length = [];
-    thread.messages.forEach(message => {
-        if (utf8.decode(message.sender_name) === participant_name && message.content) {
-            const words = message.content.split(' ');
-            words.forEach(word => {
-                words_length.push(word.length);
-            })
-        }
-    })
-    participant.average_word_length = array_average(words_length);
-})
-
-// Count participant total used words
-console.info('\t Count participant total used words')
-thread.participants.forEach(participant => {
-    const participant_name = participant.name;
-    let words_count = 0;
-    thread.messages.forEach(message => {
-        if (utf8.decode(message.sender_name) === participant_name && message.content) {
-            const words = message.content.split(' ');
-            words_count += words.length;
-        }
-    })
-    participant.words_count = words_count;
-})
-
-// Count most frequent words in thread
-console.info('\t Count most frequent words in thread')
-function wordFreq(string) {
-    var words = string.replace(/[.]/g, '').split(/\s/);
-    var freqMap = {};
-    words.forEach(function(w) {
-        if (!freqMap[w]) {
-            freqMap[w] = 0;
-        }
-        freqMap[w] += 1;
-    });
-
-    return freqMap;
+    infoLogFinish('Count every participant messages')
 }
 
-let thread_string = "";
-thread.messages.forEach(message => {
-    if (message.content && utf8.decode(message.content) !== '') {
-        thread_string += `${utf8.decode(message.content).toLowerCase()} `;
+/**
+ * Count participant average words in sentence
+ */
+function participantAverageWords() {
+    infoLogStart('Count participants average of words in messages')
+    const array_average = (array) => array.reduce((a, b) => a + b) / array.length;
+    thread.participants.forEach(participant => {
+        const participant_name = participant.name;
+        const words_in_sentence = [];
+        thread.messages.forEach(message => {
+            if (message.sender_name === participant_name && message.content) {
+                const words = message.content.split(' ');
+                words_in_sentence.push(words.length);
+            }
+        })
+        participant.average_words_per_sentence = array_average(words_in_sentence);
+    })
+    infoLogFinish('Count participants average of words in messages')
+}
+
+/**
+ * Count participant average word length
+ */
+function participantAverageWordLength() {
+    infoLogStart('Count participants average of word length')
+    const array_average = (array) => array.reduce((a, b) => a + b) / array.length;
+    thread.participants.forEach(participant => {
+        const participant_name = participant.name;
+        const words_length = [];
+        thread.messages.forEach(message => {
+            if (message.sender_name === participant_name && message.content) {
+                const words = message.content.split(' ');
+                words.forEach(word => {
+                    words_length.push(word.length);
+                })
+            }
+        })
+        participant.average_word_length = array_average(words_length);
+        infoLogFinish('Count participants average of word length')
+    })
+}
+
+/**
+ * Count participant total used words
+ */
+function participantTotalWords() {
+    infoLogStart('Count participant total used words')
+    thread.participants.forEach(participant => {
+        const participant_name = participant.name;
+        let words_count = 0;
+        thread.messages.forEach(message => {
+            if (message.sender_name === participant_name && message.content) {
+                const words = message.content.split(' ');
+                words_count += words.length;
+            }
+        })
+        participant.words_count = words_count;
+    })
+    infoLogFinish('Count all words used by participant')
+}
+
+/**
+ * Count most frequent words in thread
+ */
+function mostFrequentWords() {
+    infoLogStart('Count most frequent words in thread')
+    function wordFreq(string) {
+        var words = string.replace(/[.]/g, '').split(/\s/);
+        var freqMap = {};
+        words.forEach(function(w) {
+            if (!freqMap[w]) {
+                freqMap[w] = 0;
+            }
+            freqMap[w] += 1;
+        });
+        return freqMap;
     }
-})
-const words_array = wordFreq(thread_string);
-words_array[''] = 0;
-thread.words_count = Object.entries(words_array).sort((a,b) => b[1] - a[1]);
+    // Create one, extremely long string containing all words from thread
+    let thread_string = "";
+    thread.messages.forEach(message => {
+        if (message.content) {
+            thread_string += `${message.content.toLowerCase()} `;
+        }
+    })
+    const words_array = wordFreq(thread_string);
+    // Clear empty 'word'
+    words_array[''] = null;
+    thread.words_count = Object.entries(words_array).sort((a,b) => b[1] - a[1]);
+    infoLogFinish('Count most frequent words in thread')
+}
 
-// Count usage of "xd"
-console.info('\t Count "xd" usage')
-const xd_regexp = new RegExp(/^[xX].+[dD]$|^[xX][dD]$/gm);
-const xd_array = []
-thread_string.split(" ").forEach(word => {
-    if (word.match(xd_regexp)) {
-        xd_array.push(word);
-    }
-})
-const xd_freq = wordFreq(xd_array.join(" "))
-const xd_sorted = Object.entries(xd_freq).sort((a,b) => b[1] - a[1]);
-// Count usage of "rura"
-console.info('\t Count "rura" usage')
-const rura_regexp = new RegExp(/^r[ur]+a+$/gm);
-const rura_array = []
-thread_string.split(" ").forEach(word => {
-    if (word.match(rura_regexp)) {
-        rura_array.push(word);
-    }
-})
-const rura_freq = wordFreq(rura_array.join(" "))
-const rura_sorted = Object.entries(rura_freq).sort((a,b) => b[1] - a[1]);
-console.table(xd_sorted.slice(0,30))
+/**
+ * Export calculated data to .json file
+ */
+function exportData() {
+    infoLogStart("Creating file with calculated data")
+    fs.writeFile('export.json', JSON.stringify(thread, null, '\t'), function (err) {
+        if (err) return console.log(err);
+        infoLogFinish("Creating file with calculated data")
+    });
+}
 
 
-// TODO: Add function for word search
+function infoLogStart(message) {
+    process.stdout.write(`\n\r${chalk.red(message)}`)
+}
 
+function infoLogFinish(message) {
+    process.stdout.write(`\r${chalk.green(message)}`)
+}
 
+function errorLog(message) {
+    console.log(chalk.bgRed(message));
+}
 
-// console.log(thread.dates);
-// Save to .json
-// thread.messages = [];
-// thread.dates = [];
-// thread.messages_per = [];
-// fs.writeFile('export.json', JSON.stringify(thread, null, '\t'), function (err) {
-//     if (err) return console.log(err);
-//     console.log('\t Created file with calculated data');
-// });
+function hintLog(message) {
+    console.log(chalk.black.bgYellow(message))
+}
+
