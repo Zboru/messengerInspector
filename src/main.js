@@ -1,7 +1,8 @@
-import React from 'react'
-import ReactDOM from 'react-dom'
-import "/src/assets/css/tailwind.css"
-import "/src/assets/css/styles.css"
+import React from 'react';
+import ReactDOM from 'react-dom';
+import "/src/assets/css/tailwind.css";
+import "/src/assets/css/styles.css";
+import "./i18n"
 import App from "./App";
 
 ReactDOM.render(

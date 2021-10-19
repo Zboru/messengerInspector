@@ -1,8 +1,9 @@
 import StatCard from "../StatCard";
 import {Pie} from "react-chartjs-2";
+import {useTranslation} from "react-i18next";
 
 const AverageWordsSentence = ({conversation}) => {
-
+    const {t, i18n} = useTranslation();
     const array_average = (array) => array.reduce((a, b) => a + b) / array.length;
     const participants = [...conversation.participants];
 
@@ -45,7 +46,7 @@ const AverageWordsSentence = ({conversation}) => {
 
     return (
         <StatCard>
-            <p>Średnia ilość słów w zdaniu</p>
+            <p>{t('average_word_sentence')}</p>
             <Pie data={data} />
         </StatCard>
     )

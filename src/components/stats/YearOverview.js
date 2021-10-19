@@ -1,8 +1,10 @@
 import StatCard from "../StatCard";
 import {Line} from 'react-chartjs-2';
 import {useEffect, useState} from "react";
+import {useTranslation} from "react-i18next";
 
 const YearOverview = ({conversation, className}) => {
+    const {t, i18n} = useTranslation();
     const [statYear, setYear] = useState(new Date().getFullYear());
 
     const months = {};
@@ -59,7 +61,7 @@ const YearOverview = ({conversation, className}) => {
     return (
         <StatCard className={className}>
             <div className="flex justify-between">
-                <span>Liczba wiadomości w ciągu roku</span>
+                <span>{t('messages_per_year')}</span>
                 <select className="border" value={statYear} onChange={e => setYear(e.target.value)} name="year" id="year">
                     {getYears().map(year => {
                        return <option key={year} value={year}>{year}</option>

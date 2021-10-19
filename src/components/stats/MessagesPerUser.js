@@ -1,8 +1,9 @@
 import {Pie} from 'react-chartjs-2';
 import StatCard from "../StatCard";
+import {useTranslation} from "react-i18next";
 
 const MessagesPerUser = ({conversation}) => {
-
+    const {t, i18n} = useTranslation();
     const participants = conversation.participants;
 
     function participantMessageCount(participant) {
@@ -35,7 +36,7 @@ const MessagesPerUser = ({conversation}) => {
 
     return (
         <StatCard>
-            <p>Wiadomości na użytkownika</p>
+            <p>{t('messages_per_user')}</p>
             <Pie data={data}/>
         </StatCard>
     )

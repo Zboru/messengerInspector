@@ -1,7 +1,8 @@
 import {Pie} from 'react-chartjs-2';
 import StatCard from "../StatCard";
+import {useTranslation} from "react-i18next";
 const WordsPerUser = ({conversation}) => {
-
+    const {t, i18n} = useTranslation();
     const participantsWords = conversation.participants.map(participant => {
         let wordCount = 0;
         conversation.messages.forEach(message => {
@@ -39,7 +40,7 @@ const WordsPerUser = ({conversation}) => {
 
     return (
         <StatCard>
-            <p>Liczba słów na użytkownika</p>
+            <p>{t('words_per_user')}</p>
             <Pie data={data}/>
         </StatCard>
     )

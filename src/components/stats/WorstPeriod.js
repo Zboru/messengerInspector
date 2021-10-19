@@ -1,7 +1,9 @@
 import StatCard from "../StatCard";
 import {useEffect, useState} from "react";
+import {useTranslation} from "react-i18next";
 
 const WorstPeriod = ({conversation}) => {
+    const {t, i18n} = useTranslation();
     const [selectedPeriod, setPeriod] = useState("year");
     const [result, setResult] = useState([]);
 
@@ -30,16 +32,16 @@ const WorstPeriod = ({conversation}) => {
     return (
         <StatCard>
             <div className="flex justify-between">
-                <span>Najgorszy okres</span>
+                <span>{t('worst_period')}</span>
                 <select onChange={e => setPeriod(e.target.value)} value={selectedPeriod} name="period" id="period">
-                    <option value="day">Dzień</option>
-                    <option value="month">Miesiąc</option>
-                    <option value="year">Rok</option>
+                    <option value="day">{t('day')}</option>
+                    <option value="month">{t('month')}</option>
+                    <option value="year">{t('year')}</option>
                 </select>
             </div>
             {result && <div className="flex h-full justify-center flex-col">
                 <p className="text-2xl text-center">{result[0]}</p>
-                <p className="text-3xl text-center">{result[1]} wiad.</p>
+                <p className="text-3xl text-center">{result[1]} {t('period_messages_abbr')}</p>
             </div>}
         </StatCard>
     )

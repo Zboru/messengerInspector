@@ -1,8 +1,10 @@
 import {Bar} from 'react-chartjs-2';
 import {useState} from "react";
 import StatCard from "../StatCard";
+import {useTranslation} from "react-i18next";
 
 const MostFrequentWords = ({conversation, className}) => {
+    const {t, i18n} = useTranslation();
     const [stringLength, setLength] = useState(1);
 
 
@@ -77,11 +79,11 @@ const MostFrequentWords = ({conversation, className}) => {
     return (
         <StatCard className={className}>
             <div className="flex justify-between">
-                <span>Najczęściej używane słowa</span>
+                <span>{t('most_frequent_words')}</span>
                 <div>
                     <input type="number" min={1} max={20} onChange={e => setLength(e.target.value)} value={stringLength}
                            className="border w-10"/>
-                    <span>+ znaków</span>
+                    <span>+ {t('most_frequent_words_input')}</span>
                 </div>
             </div>
             <Bar data={data} options={options}/>

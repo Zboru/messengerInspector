@@ -1,8 +1,9 @@
 import StatCard from "../StatCard";
 import {Doughnut} from "react-chartjs-2";
+import {useTranslation} from "react-i18next";
 
 const PhotosCount = ({conversation}) => {
-
+    const {t, i18n} = useTranslation();
     const participants = [...conversation.participants];
     conversation.messages.forEach(message => {
         if (message.photos && message.photos.length) {
@@ -44,7 +45,7 @@ const PhotosCount = ({conversation}) => {
 
     return (
         <StatCard>
-            <p>Liczba wysłanych obrazków</p>
+            <p>{t('images_sent')}</p>
             <Doughnut data={data}/>
         </StatCard>
     )
