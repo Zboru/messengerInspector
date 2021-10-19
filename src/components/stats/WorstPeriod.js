@@ -1,7 +1,7 @@
 import StatCard from "../StatCard";
 import {useEffect, useState} from "react";
 
-const BestPeriod = ({conversation}) => {
+const WorstPeriod = ({conversation}) => {
     const [selectedPeriod, setPeriod] = useState("year");
     const [result, setResult] = useState([]);
 
@@ -19,7 +19,7 @@ const BestPeriod = ({conversation}) => {
                 periods[date] = 1;
             }
         })
-        const sortedPeriods = Object.entries(periods).sort((a, b) => b[1] - a[1]);
+        const sortedPeriods = Object.entries(periods).sort((a, b) => a[1] - b[1]);
         setResult(sortedPeriods[0]);
     }
 
@@ -30,7 +30,7 @@ const BestPeriod = ({conversation}) => {
     return (
         <StatCard>
             <div className="flex justify-between">
-                <span>Najlepszy okres</span>
+                <span>Najgorszy okres</span>
                 <select onChange={e => setPeriod(e.target.value)} value={selectedPeriod} name="period" id="period">
                     <option value="day">Dzień</option>
                     <option value="month">Miesiąc</option>
@@ -44,4 +44,4 @@ const BestPeriod = ({conversation}) => {
         </StatCard>
     )
 }
-export default BestPeriod
+export default WorstPeriod

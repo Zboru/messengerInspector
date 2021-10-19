@@ -6,6 +6,12 @@ import MessageCount from "./components/stats/MessageCount";
 import CreatedAt from "./components/stats/CreatedAt";
 import MessagesPerUser from "./components/stats/MessagesPerUser";
 import WordsPerUser from "./components/stats/WordsPerUser";
+import MostFrequentWords from "./components/stats/MostFrequentWords";
+import AverageWordsSentence from "./components/stats/AverageWordsSentence";
+import YearOverview from "./components/stats/YearOverview";
+import PhotosCount from "./components/stats/PhotosCount";
+import BestPeriod from "./components/stats/BestPeriod";
+import WorstPeriod from "./components/stats/WorstPeriod";
 
 const Home = () => {
     const [conversation, setConversation] = useState({
@@ -82,6 +88,12 @@ const Home = () => {
                 <CreatedAt conversation={conversation}/>
                 <MessagesPerUser conversation={conversation}/>
                 <WordsPerUser conversation={conversation}/>
+                <MostFrequentWords className="col-span-2" conversation={conversation}/>
+                <YearOverview className="col-span-2" conversation={conversation}/>
+                <AverageWordsSentence conversation={conversation}/>
+                <PhotosCount conversation={conversation}/>
+                <BestPeriod conversation={conversation}/>
+                <WorstPeriod conversation={conversation}/>
             </div>
         </>
     )

@@ -1,4 +1,5 @@
 import {Pie} from 'react-chartjs-2';
+import StatCard from "../StatCard";
 
 const MessagesPerUser = ({conversation}) => {
 
@@ -11,7 +12,6 @@ const MessagesPerUser = ({conversation}) => {
     const data = {
         labels: participants.map(participant => participant.name),
         datasets: [{
-            label: '# of Votes',
             backgroundColor: [
                 'rgba(255, 99, 132, 0.2)',
                 'rgba(54, 162, 235, 0.2)',
@@ -34,10 +34,10 @@ const MessagesPerUser = ({conversation}) => {
     }
 
     return (
-        <div className="p-5 border">
+        <StatCard>
             <p>Wiadomości na użytkownika</p>
             <Pie data={data}/>
-        </div>
+        </StatCard>
     )
 }
 export default MessagesPerUser

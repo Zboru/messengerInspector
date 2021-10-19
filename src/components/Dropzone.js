@@ -2,7 +2,7 @@ import {useDropzone} from "react-dropzone";
 import {useCallback} from "react";
 import clsx from "clsx";
 
-const zoneStyles = ["border border-dashed border-2 p-5"];
+const zoneStyles = ["border border-dashed border-2 p-5 mt-2"];
 
 const Dropzone = ({onChange}) => {
     const onDrop = useCallback(acceptedFiles => {
@@ -17,7 +17,7 @@ const Dropzone = ({onChange}) => {
                     <p>Upuść swoje pliki tutaj ...</p> :
                     <p>Przenieś swoje pliki tutaj, albo kliknij by wybrać</p>
             }
-            {acceptedFiles ?
+            {acceptedFiles.length ?
                 <p>Załadowano {acceptedFiles.length} plików</p> :
                 null
             }

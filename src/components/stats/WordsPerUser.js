@@ -1,4 +1,5 @@
 import {Pie} from 'react-chartjs-2';
+import StatCard from "../StatCard";
 const WordsPerUser = ({conversation}) => {
 
     const participantsWords = conversation.participants.map(participant => {
@@ -15,7 +16,6 @@ const WordsPerUser = ({conversation}) => {
     const data = {
         labels: conversation.participants.map(participant => participant.name),
         datasets: [{
-            label: '# of Votes',
             backgroundColor: [
                 'rgba(255, 99, 132, 0.2)',
                 'rgba(54, 162, 235, 0.2)',
@@ -38,10 +38,10 @@ const WordsPerUser = ({conversation}) => {
     }
 
     return (
-        <div className="p-5 border">
+        <StatCard>
             <p>Liczba słów na użytkownika</p>
             <Pie data={data}/>
-        </div>
+        </StatCard>
     )
 }
 export default WordsPerUser

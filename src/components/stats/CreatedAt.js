@@ -1,3 +1,5 @@
+import StatCard from "../StatCard";
+
 const CreatedAt = ({conversation}) => {
 
     function createdAtDate() {
@@ -8,10 +10,10 @@ const CreatedAt = ({conversation}) => {
         }
     }
     return (
-        <div className="p-5 border">
+        <StatCard>
             <p>Data założenia</p>
-            <p>{conversation && createdAtDate()}</p>
-        </div>
+            <p className="flex justify-center items-center text-3xl h-full">{conversation && createdAtDate()}</p>
+        </StatCard>
     )
 }
 export default CreatedAt
