@@ -9,7 +9,7 @@ import WordsPerUser from "./components/stats/WordsPerUser";
 import MostFrequentWords from "./components/stats/MostFrequentWords";
 import AverageWordsSentence from "./components/stats/AverageWordsSentence";
 import YearOverview from "./components/stats/YearOverview";
-import PhotosCount from "./components/stats/PhotosCount";
+import MultimediaCount from "./components/stats/MultimediaCount";
 import BestPeriod from "./components/stats/BestPeriod";
 import WorstPeriod from "./components/stats/WorstPeriod";
 import AverageDayActivity from "./components/stats/AverageDayActivity";
@@ -84,7 +84,7 @@ const Home = () => {
     return (
         <>
             <Dropzone onChange={handleFiles}/>
-            <div className="mt-2 grid grid-cols-3 gap-2">
+            <div className="mt-2 md:grid md:grid-cols-3 gap-2">
                 <MessageCount conversation={conversation}/>
                 <CreatedAt conversation={conversation}/>
                 <MessagesPerUser conversation={conversation}/>
@@ -92,7 +92,7 @@ const Home = () => {
                 <MostFrequentWords className="col-span-2" conversation={conversation}/>
                 <YearOverview className="col-span-2" conversation={conversation}/>
                 <AverageWordsSentence conversation={conversation}/>
-                <PhotosCount conversation={conversation}/>
+                <MultimediaCount conversation={conversation}/>
                 <AverageDayActivity className="col-span-2" conversation={conversation}/>
                 <BestPeriod conversation={conversation}/>
                 <WorstPeriod conversation={conversation}/>

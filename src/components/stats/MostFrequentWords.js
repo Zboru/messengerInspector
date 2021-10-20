@@ -2,6 +2,7 @@ import {Bar} from 'react-chartjs-2';
 import {useState} from "react";
 import StatCard from "../StatCard";
 import {useTranslation} from "react-i18next";
+import ChartDataLabels from 'chartjs-plugin-datalabels';
 
 const MostFrequentWords = ({conversation, className}) => {
     const {t, i18n} = useTranslation();
@@ -72,9 +73,16 @@ const MostFrequentWords = ({conversation, className}) => {
         plugins: {
             legend: {
                 display: false
+            },
+            datalabels: {
+                anchor: 'end',
+                align: 'start',
+                offset: 6
             }
         }
     };
+
+    const plugins = [ChartDataLabels]
 
     return (
         <StatCard className={className}>
@@ -86,7 +94,7 @@ const MostFrequentWords = ({conversation, className}) => {
                     <span>+ {t('most_frequent_words_input')}</span>
                 </div>
             </div>
-            <Bar data={data} options={options}/>
+            <Bar data={data} options={options} plugins={plugins}/>
         </StatCard>
     )
 }

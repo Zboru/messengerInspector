@@ -1,8 +1,10 @@
 import {Pie} from 'react-chartjs-2';
 import StatCard from "../StatCard";
 import {useTranslation} from "react-i18next";
+import ChartDataLabels from 'chartjs-plugin-datalabels';
+
 const WordsPerUser = ({conversation}) => {
-    const {t, i18n} = useTranslation();
+    const {t} = useTranslation();
     const participantsWords = conversation.participants.map(participant => {
         let wordCount = 0;
         conversation.messages.forEach(message => {
@@ -15,7 +17,7 @@ const WordsPerUser = ({conversation}) => {
     })
 
     const data = {
-        labels: conversation.participants.map(participant => participant.name),
+        labels: participantsWords.map(participant => participant.name),
         datasets: [{
             backgroundColor: [
                 'rgba(255, 99, 132, 0.2)',
@@ -38,10 +40,22 @@ const WordsPerUser = ({conversation}) => {
         }]
     }
 
+    const options = {
+        plugins: {
+            datalabels: {
+                anchor: 'end',
+                align: 'center',
+                offset: 6,
+            }
+        }
+    };
+
+    const plugins = [ChartDataLabels]
+
     return (
         <StatCard>
             <p>{t('words_per_user')}</p>
-            <Pie data={data}/>
+            <Pie data={data} options={options} plugins={plugins}/>
         </StatCard>
     )
 }

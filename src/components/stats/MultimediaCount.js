@@ -1,9 +1,10 @@
 import StatCard from "../StatCard";
 import {Doughnut} from "react-chartjs-2";
 import {useTranslation} from "react-i18next";
+import ChartDataLabels from "chartjs-plugin-datalabels";
 
-const PhotosCount = ({conversation}) => {
-    const {t, i18n} = useTranslation();
+const MultimediaCount = ({conversation}) => {
+    const {t} = useTranslation();
     const participants = [...conversation.participants];
     conversation.messages.forEach(message => {
         if (message.photos && message.photos.length) {
@@ -43,11 +44,23 @@ const PhotosCount = ({conversation}) => {
         ],
     };
 
+    const options = {
+        plugins: {
+            datalabels: {
+                anchor: 'end',
+                align: 'center',
+                offset: 6
+            }
+        }
+    };
+
+    const plugins = [ChartDataLabels]
+
     return (
         <StatCard>
-            <p>{t('images_sent')}</p>
-            <Doughnut data={data}/>
+            <p>{t('media_sent')}</p>
+            <Doughnut data={data} options={options} plugins={plugins}/>
         </StatCard>
     )
 }
-export default PhotosCount
+export default MultimediaCount

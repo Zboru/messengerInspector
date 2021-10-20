@@ -1,6 +1,7 @@
 import {Pie} from 'react-chartjs-2';
 import StatCard from "../StatCard";
 import {useTranslation} from "react-i18next";
+import ChartDataLabels from 'chartjs-plugin-datalabels';
 
 const MessagesPerUser = ({conversation}) => {
     const {t, i18n} = useTranslation();
@@ -34,10 +35,22 @@ const MessagesPerUser = ({conversation}) => {
         }]
     }
 
+    const options = {
+        plugins: {
+            datalabels: {
+                anchor: 'end',
+                align: 'center',
+                offset: 6
+            }
+        }
+    };
+
+    const plugins = [ChartDataLabels]
+
     return (
         <StatCard>
             <p>{t('messages_per_user')}</p>
-            <Pie data={data}/>
+            <Pie data={data} options={options} plugins={plugins}/>
         </StatCard>
     )
 }

@@ -44,7 +44,7 @@ const YearOverview = ({conversation, className}) => {
     const options = {
         scales: {
             y: {
-                beginAtZero: true
+                beginAtZero: false
             }
         },
         plugins: {

@@ -1,9 +1,10 @@
 import StatCard from "../StatCard";
 import {Pie} from "react-chartjs-2";
 import {useTranslation} from "react-i18next";
+import ChartDataLabels from 'chartjs-plugin-datalabels';
 
 const AverageWordsSentence = ({conversation}) => {
-    const {t, i18n} = useTranslation();
+    const {t} = useTranslation();
     const array_average = (array) => array.reduce((a, b) => a + b) / array.length;
     const participants = [...conversation.participants];
 
@@ -39,15 +40,27 @@ const AverageWordsSentence = ({conversation}) => {
                 'rgba(153, 102, 255, 1)',
                 'rgba(255, 159, 64, 1)',
             ],
-            data: participants.map(p => p.average_words_per_sentence),
+            data: participants.map(p => p.average_words_per_sentence.toFixed(2)),
             borderWidth: 1,
         }]
     }
 
+    const options = {
+        plugins: {
+            datalabels: {
+                anchor: 'end',
+                align: 'start',
+                offset: 6
+            }
+        }
+    };
+
+    const plugins = [ChartDataLabels]
+
     return (
         <StatCard>
             <p>{t('average_word_sentence')}</p>
-            <Pie data={data} />
+            <Pie data={data} options={options} plugins={plugins} />
         </StatCard>
     )
 }
