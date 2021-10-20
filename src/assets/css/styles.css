@@ -1,3 +1,7 @@
 body {
     font-family: 'Rubik', sans-serif;
 }
+
+.dark body {
+    @apply bg-gray-800
+}
