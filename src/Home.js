@@ -12,6 +12,7 @@ import YearOverview from "./components/stats/YearOverview";
 import PhotosCount from "./components/stats/PhotosCount";
 import BestPeriod from "./components/stats/BestPeriod";
 import WorstPeriod from "./components/stats/WorstPeriod";
+import AverageDayActivity from "./components/stats/AverageDayActivity";
 
 const Home = () => {
     const [conversation, setConversation] = useState({
@@ -92,6 +93,7 @@ const Home = () => {
                 <YearOverview className="col-span-2" conversation={conversation}/>
                 <AverageWordsSentence conversation={conversation}/>
                 <PhotosCount conversation={conversation}/>
+                <AverageDayActivity className="col-span-2" conversation={conversation}/>
                 <BestPeriod conversation={conversation}/>
                 <WorstPeriod conversation={conversation}/>
             </div>
