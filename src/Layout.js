@@ -1,6 +1,7 @@
 import DarkModeSwitch from "./components/DarkModeSwitch";
 import {useTranslation} from "react-i18next";
 import LanguageSwitch from "./components/LanguageSwitch";
+import GithubLink from "./components/GithubLink";
 
 const Layout = (props) => {
     const {t, i18n} = useTranslation();
@@ -9,6 +10,7 @@ const Layout = (props) => {
             <div className={'flex items-center px-5 justify-between md:px-0 pt-2 dark:text-white border-b border-gray-700 pb-2'}>
                 <a href="/">{t('title')}</a>
                 <div className="flex">
+                    <GithubLink/>
                     <LanguageSwitch />
                     <DarkModeSwitch/>
                 </div>
