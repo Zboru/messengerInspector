@@ -4,7 +4,10 @@ import {initReactI18next} from "react-i18next";
 const resources = {
     en: {
         translation: {
-            "dropzone_prompt": "Drag 'n' drop your files here, or click to select",
+            "title": "Inspector for Messenger",
+            "dropzone_files": "Loaded {{count}} files",
+            "dropzone_prompt": "Drag 'n' drop your .json files here, or click to select",
+            "dropzone_drag_prompt": "Drop your files here...",
             "message_count": "Total message count:",
             "created_at": "Created at:",
             "messages_per_user": "Messages per user:",
@@ -13,40 +16,46 @@ const resources = {
             "most_frequent_words_input": "letters",
             "messages_per_year": "Message count per year:",
             "average_word_sentence": "Average number of words per sentence:",
-            "images_sent": "Number of images sent:",
+            "media_sent": "Number of non-text messages:",
             "best_period": "Best period:",
             "worst_period": "Worst period:",
             "year": "Year",
             "month": "Month",
             "day": "Day",
-            "period_messages_abbr": "messages"
+            "period_messages_abbr": "messages",
+            "average_day_activity": "Average daily activity"
+
         }
     },
     pl: {
         translation: {
-            "dropzone_prompt": "Przenieś swoje pliki tutaj, albo kliknij by wybrać",
+            "title": "Inspector dla Messenger",
+            "dropzone_files": "Załadowano {{count}} plików",
+            "dropzone_prompt": "Przenieś swoje pliki .json tutaj, albo kliknij by wybrać",
+            "dropzone_drag_prompt": "Upuść swoje pliki tutaj...",
             "message_count": "Liczba wiadomości:",
             "created_at": "Data założenia:",
             "messages_per_user": "Wiadomości na użytkownika:",
             "words_per_user": "Liczba słów na użytkownika:",
             "most_frequent_words": "Najczęściej używane słowa:",
             "most_frequent_words_input": "liter",
-            "messages_per_year": "Liczba wiadomości w ciągu roku:",
+            "messages_per_year": "Liczba wiadomości w skali roku:",
             "average_word_sentence": "Średnia ilość słów w zdaniu:",
-            "images_sent": "Liczba wysłanych obrazków:",
+            "media_sent": "Liczba wiadomości nietekstowych:",
             "best_period": "Najlepszy okres:",
             "worst_period": "Najgorszy okres:",
             "year": "Rok",
             "month": "Miesiąc",
             "day": "Dzień",
-            "period_messages_abbr": "wiadomości"
+            "period_messages_abbr": "wiadomości",
+            "average_day_activity": "Średnia aktywność w ciągu dnia"
         }
     }
 }
 
 i18n.use(initReactI18next).init({
     resources,
-    lng: "en",
+    lng: "pl",
     interpolation: {
         escapeValue: false,
     }
