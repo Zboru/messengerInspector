@@ -8,7 +8,6 @@ const CreatedAt = ({conversation}) => {
         const messages = conversation.messages.sort((a, b) => a.timestamp_ms - b.timestamp_ms)
         if (messages && messages.length) {
             const date = new Date(messages[0].timestamp_ms);
-            console.log(date.toLocaleDateString());
             return date.toLocaleDateString()
         }
     }

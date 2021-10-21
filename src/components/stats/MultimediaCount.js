@@ -16,7 +16,6 @@ const MultimediaCount = ({conversation}) => {
             }
         }
     })
-    console.log(participants);
 
     const data = {
         labels: participants.map(participant => participant.name),
