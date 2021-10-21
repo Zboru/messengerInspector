@@ -6,8 +6,9 @@ const MessageCount = ({conversation}) => {
     return (
         <StatCard>
             <p>{t('message_count')}</p>
-            <div className="flex h-full justify-center items-center">
+            <div className="flex flex-col h-full justify-center items-center">
                 <p className="text-3xl mt-2 md:mt-0">{conversation.messages.length || ""}</p>
+                <p className="text-3xl">{t('period_messages_abbr')}</p>
             </div>
         </StatCard>
     )
