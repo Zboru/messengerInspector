@@ -84,7 +84,7 @@ const Home = () => {
     return (
         <>
             <Dropzone onChange={handleFiles}/>
-            <div className="mt-2 md:grid md:grid-cols-3 gap-2">
+            <div className="stat-grid mt-2 md:grid md:grid-cols-3 gap-2">
                 <MessageCount conversation={conversation}/>
                 <CreatedAt conversation={conversation}/>
                 <MessagesPerUser conversation={conversation}/>
