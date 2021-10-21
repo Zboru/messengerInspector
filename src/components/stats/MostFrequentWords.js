@@ -84,13 +84,18 @@ const MostFrequentWords = ({conversation, className}) => {
 
     const plugins = [ChartDataLabels]
 
+    function onlyNumbers(e) {
+        const regex = /[0-9]/
+        if (!regex.test(e.key)) e.preventDefault();
+    }
+
     return (
         <StatCard className={className}>
             <div className="flex justify-between">
                 <span>{t('most_frequent_words')}</span>
                 <div>
-                    <input type="number" min={1} max={20} onChange={e => setLength(e.target.value)} value={stringLength}
-                           className="border w-10"/>
+                    <input onKeyPress={onlyNumbers} maxLength={2} type="number" min={1} max={20} onChange={e => setLength(e.target.value)} value={stringLength}
+                           className="border w-10 dark:bg-gray-800 dark:border-gray-500"/>
                     <span>+ {t('most_frequent_words_input')}</span>
                 </div>
             </div>
