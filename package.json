@@ -1,9 +1,12 @@
 {
+  "homepage": "https://zboru.github.io/messengerInspector",
   "name": "messenger",
   "version": "1.0.0",
   "scripts": {
     "start": "parcel ./index.html --open",
-    "build": "parcel build ./index.html --no-content-hash"
+    "build": "parcel build ./index.html --no-content-hash --no-source-maps",
+    "predeploy": "npm run build",
+    "deploy": "gh-pages -d dist"
   },
   "keywords": [],
   "author": "",
@@ -17,8 +20,11 @@
     "chart.js": "^3.5.1",
     "chartjs-plugin-datalabels": "^2.0.0",
     "clsx": "^1.1.1",
+    "fuse.js": "^6.4.6",
+    "gh-pages": "^3.2.3",
     "html2canvas": "^1.3.2",
     "i18next": "^21.3.2",
+    "lodash.debounce": "^4.0.8",
     "postcss": "^8.3.9",
     "react": "^17.0.2",
     "react-chartjs-2": "^3.1.0",
