@@ -5,7 +5,8 @@ const resources = {
     en: {
         translation: {
             "title": "Inspector for Messenger",
-            "dropzone_files": "Loaded {{count}} files",
+            "dropzoneFiles_one": "Loaded {{count}} file",
+            "dropzoneFiles_other": "Loaded {{count}} files",
             "dropzone_prompt": "Drag 'n' drop your .json files here, or click to select",
             "dropzone_drag_prompt": "Drop your files here...",
             "load_sample_data_divider": "or",
@@ -33,7 +34,9 @@ const resources = {
     pl: {
         translation: {
             "title": "Inspector dla Messenger",
-            "dropzone_files": "Załadowano {{count}} plików",
+            "dropzoneFiles_one": "Załadowano {{count}} plik",
+            "dropzoneFiles_few": "Załadowano {{count}} pliki",
+            "dropzoneFiles_many": "Załadowano {{count}} plików",
             "dropzone_prompt": "Przenieś swoje pliki .json tutaj, albo kliknij by wybrać",
             "dropzone_drag_prompt": "Upuść swoje pliki tutaj...",
             "load_sample_data_divider": "lub",

@@ -14,14 +14,9 @@ const Dropzone = ({onChange}) => {
     return (
         <div className={clsx(zoneStyles)} {...getRootProps()}>
             <input {...getInputProps()} />
-            {
-                isDragActive ?
-                    <p>{t('dropzone_drag_prompt')}</p> :
-                    <p>{t('dropzone_prompt')}</p>
-            }
             {acceptedFiles.length ?
-                <p>{t('dropzone_files', {count: acceptedFiles.length})}</p> :
-                null
+                <p>{t('dropzoneFiles', {count: acceptedFiles.length})}</p> :
+                isDragActive ? <p>{t('dropzone_drag_prompt')}</p> : <p>{t('dropzone_prompt')}</p>
             }
         </div>
     );
