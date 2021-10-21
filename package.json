@@ -1,10 +1,9 @@
 {
-  "homepage": "https://zboru.github.io/messengerInspector/",
   "name": "messenger",
   "version": "1.0.0",
   "scripts": {
     "start": "parcel ./index.html --open",
-    "build": "parcel build ./index.html --no-content-hash --no-source-maps",
+    "build": "parcel build ./index.html --no-content-hash --no-source-maps --public-url /messengerInspector/",
     "predeploy": "npm run build",
     "deploy": "gh-pages -d dist"
   },
