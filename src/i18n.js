@@ -8,6 +8,9 @@ const resources = {
             "dropzone_files": "Loaded {{count}} files",
             "dropzone_prompt": "Drag 'n' drop your .json files here, or click to select",
             "dropzone_drag_prompt": "Drop your files here...",
+            "load_sample_data_divider": "or",
+            "load_sample_data": "Load sample data to see how the application works",
+            "load_sample_data_btn": "Generate sample data",
             "message_count": "Total message count:",
             "created_at": "Created at:",
             "messages_per_user": "Messages per user:",
@@ -33,6 +36,9 @@ const resources = {
             "dropzone_files": "Załadowano {{count}} plików",
             "dropzone_prompt": "Przenieś swoje pliki .json tutaj, albo kliknij by wybrać",
             "dropzone_drag_prompt": "Upuść swoje pliki tutaj...",
+            "load_sample_data_divider": "lub",
+            "load_sample_data": "Wygeneruj dane, aby zobaczyć działanie aplikacji",
+            "load_sample_data_btn": "Wygeneruj dane",
             "message_count": "Liczba wiadomości:",
             "created_at": "Data założenia:",
             "messages_per_user": "Wiadomości na użytkownika:",
@@ -49,7 +55,8 @@ const resources = {
             "day": "Dzień",
             "period_messages_abbr": "wiadomości",
             "average_day_activity": "Średnia aktywność w ciągu dnia",
-            "search_word_frequency": "Wyszukaj częstotliwość słowa"
+            "search_word_frequency": "Wyszukaj częstotliwość słowa",
+
         }
     }
 }

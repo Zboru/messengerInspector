@@ -14,8 +14,12 @@ import BestPeriod from "./components/stats/BestPeriod";
 import WorstPeriod from "./components/stats/WorstPeriod";
 import AverageDayActivity from "./components/stats/AverageDayActivity";
 import SearchWordFrequency from "./components/stats/SearchWordFrequency";
+import {useTranslation} from "react-i18next";
+import Divider from "./components/Divider";
+import DataGenerator from "./components/DataGenerator";
 
 const Home = () => {
+    const {t} = useTranslation();
     const [conversation, setConversation] = useState({
         participants: [],
         title: "",
@@ -84,7 +88,11 @@ const Home = () => {
 
     return (
         <>
-            <Dropzone onChange={handleFiles}/>
+            <div className="flex py-3">
+                <Dropzone onChange={handleFiles}/>
+                <Divider/>
+                <DataGenerator setConversation={setConversation}/>
+            </div>
             <div className="stat-grid mt-2 md:grid md:grid-cols-3 gap-2">
                 <MessageCount conversation={conversation}/>
                 <CreatedAt conversation={conversation}/>

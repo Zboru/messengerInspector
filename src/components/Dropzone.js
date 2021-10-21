@@ -3,7 +3,7 @@ import {useCallback} from "react";
 import clsx from "clsx";
 import {useTranslation} from "react-i18next";
 
-const zoneStyles = ["border border-dashed border-2 dark:border-gray-500 dark:text-white p-5 mt-2"];
+const zoneStyles = ["border border-dashed border-2 flex flex-col justify-center dark:border-gray-500 dark:text-white p-5 mt-2"];
 
 const Dropzone = ({onChange}) => {
     const {t, i18n} = useTranslation();
