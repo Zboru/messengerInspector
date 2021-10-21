@@ -23,8 +23,8 @@ const resources = {
             "month": "Month",
             "day": "Day",
             "period_messages_abbr": "messages",
-            "average_day_activity": "Average daily activity"
-
+            "average_day_activity": "Average daily activity",
+            "search_word_frequency": "Search word frequency"
         }
     },
     pl: {
@@ -48,7 +48,8 @@ const resources = {
             "month": "Miesiąc",
             "day": "Dzień",
             "period_messages_abbr": "wiadomości",
-            "average_day_activity": "Średnia aktywność w ciągu dnia"
+            "average_day_activity": "Średnia aktywność w ciągu dnia",
+            "search_word_frequency": "Wyszukaj częstotliwość słowa"
         }
     }
 }

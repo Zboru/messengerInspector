@@ -13,6 +13,7 @@ import MultimediaCount from "./components/stats/MultimediaCount";
 import BestPeriod from "./components/stats/BestPeriod";
 import WorstPeriod from "./components/stats/WorstPeriod";
 import AverageDayActivity from "./components/stats/AverageDayActivity";
+import SearchWordFrequency from "./components/stats/SearchWordFrequency";
 
 const Home = () => {
     const [conversation, setConversation] = useState({
@@ -94,6 +95,7 @@ const Home = () => {
                 <AverageWordsSentence conversation={conversation}/>
                 <MultimediaCount conversation={conversation}/>
                 <AverageDayActivity className="col-span-2" conversation={conversation}/>
+                <SearchWordFrequency className="col-span-2" conversation={conversation}/>
                 <BestPeriod conversation={conversation}/>
                 <WorstPeriod conversation={conversation}/>
             </div>
