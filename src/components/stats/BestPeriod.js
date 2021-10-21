@@ -33,7 +33,7 @@ const BestPeriod = ({conversation}) => {
         <StatCard>
             <div className="flex justify-between">
                 <span>{t('best_period')}</span>
-                <select onChange={e => setPeriod(e.target.value)} value={selectedPeriod} name="period" id="period">
+                <select className="border dark:border-gray-500 dark:bg-gray-800" onChange={e => setPeriod(e.target.value)} value={selectedPeriod} name="period" id="period">
                     <option value="day">{t('day')}</option>
                     <option value="month">{t('month')}</option>
                     <option value="year">{t('year')}</option>

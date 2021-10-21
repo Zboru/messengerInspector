@@ -62,7 +62,7 @@ const YearOverview = ({conversation, className}) => {
         <StatCard className={className}>
             <div className="flex justify-between">
                 <span>{t('messages_per_year')}</span>
-                <select className="border" value={statYear} onChange={e => setYear(e.target.value)} name="year" id="year">
+                <select className="border dark:border-gray-500 dark:bg-gray-800" value={statYear} onChange={e => setYear(e.target.value)} name="year" id="year">
                     {getYears().map(year => {
                        return <option key={year} value={year}>{year}</option>
                     })}
